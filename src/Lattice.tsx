@@ -10,7 +10,7 @@ export type LatticeTag = {
   name: string;
   color: ColorRepresentation;
   radius: number;
-  neighbours?: NeighbourDef[];
+  neighbours?: (NeighbourDef | NeighbourDefWithTags)[];
 };
 
 type LatticeDefBase = {
