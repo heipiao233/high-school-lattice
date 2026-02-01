@@ -3,6 +3,8 @@ import * as THREE from "three";
 
 export type AtomDef = {
   position: [number, number, number];
+  rotation?: [number, number, number]; // 欧拉角 (弧度), 顺序 XYZ
+  invert?: boolean; // 是否对相对坐标取反（乘以 -1）
 };
 
 export type AtomDefWithTags = AtomDef & {

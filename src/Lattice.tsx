@@ -1,4 +1,5 @@
 import type { ColorRepresentation } from "three";
+import * as THREE from "three";
 import { Atom, type AtomDef, type AtomDefWithTags } from "./Atom";
 import { useState, useMemo, useEffect } from "react";
 
@@ -63,6 +64,26 @@ function getMainTagMap(lattice: LatticeDefWithTags) {
 // 辅助函数：位置转字符串
 function positionToString(position: [number, number, number]): string {
   return `${position[0]},${position[1]},${position[2]}`;
+}
+
+// 辅助函数：将相对偏移向量应用原子的变换（旋转 + 反演）
+function applyTransformToOffset(
+  offset: [number, number, number],
+  rotation?: [number, number, number],
+  invert?: boolean
+): [number, number, number] {
+  let vec = new THREE.Vector3(offset[0], offset[1], offset[2]);
+  // 1. 应用旋转
+  if (rotation) {
+    const [rx, ry, rz] = rotation;
+    const euler = new THREE.Euler(rx, ry, rz, 'XYZ');
+    vec.applyEuler(euler);
+  }
+  // 2. 应用反演
+  if (invert) {
+    vec.multiplyScalar(-1);
+  }
+  return [vec.x, vec.y, vec.z];
 }
 
 // 解析原子标签
@@ -158,21 +179,24 @@ export function Lattice(lattice: LatticeProps) {
     if (!neighboursSource) return [];
 
     return neighboursSource
-      .filter((neighbour) => {
-        const neighbourPosition: [number, number, number] = [
-          selectedAtom.position[0] + neighbour.position[0],
-          selectedAtom.position[1] + neighbour.position[1],
-          selectedAtom.position[2] + neighbour.position[2],
-        ];
-        return !atomPositionSet.has(positionToString(neighbourPosition));
-      })
       .map((neighbour) => {
+        // 应用选中原子的变换到邻居的相对坐标
+        const transformedOffset = applyTransformToOffset(
+          neighbour.position,
+          selectedAtom.rotation,
+          selectedAtom.invert
+        );
         const neighbourPosition: [number, number, number] = [
-          selectedAtom.position[0] + neighbour.position[0],
-          selectedAtom.position[1] + neighbour.position[1],
-          selectedAtom.position[2] + neighbour.position[2],
+          selectedAtom.position[0] + transformedOffset[0],
+          selectedAtom.position[1] + transformedOffset[1],
+          selectedAtom.position[2] + transformedOffset[2],
         ];
-        
+        return { neighbour, transformedOffset, neighbourPosition };
+      })
+      .filter(({ neighbourPosition }) => 
+        !atomPositionSet.has(positionToString(neighbourPosition))
+      )
+      .map(({ neighbour, transformedOffset, neighbourPosition }) => {
         const atomDef: AtomDef = {
           position: neighbourPosition,
         };
