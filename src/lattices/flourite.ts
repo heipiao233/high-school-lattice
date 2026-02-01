@@ -157,7 +157,7 @@ export default {
   tags: {
     ion: {
       Ca: {
-        radius: Math.sqrt(3) / 4, // 钙离子半径
+        radius: Math.sqrt(3) / 8, // 钙离子半径 ≈ 0.2165 a
         name: "钙离子",
         color: 0x0099ff, // 蓝色
         neighbours: [
@@ -173,7 +173,7 @@ export default {
         ],
       },
       Fa: {
-        radius: Math.sqrt(2) / 4, // 氟离子半径（较小）
+        radius: Math.sqrt(2) / 8, // 氟离子半径 ≈ 0.1768 a
         name: "氟离子",
         color: 0x00ff00, // 绿色
         neighbours: [
@@ -185,7 +185,7 @@ export default {
         ],
       },
       Fb: {
-        radius: Math.sqrt(2) / 4, // 氟离子半径（较小）
+        radius: Math.sqrt(2) / 8, // 氟离子半径 ≈ 0.1768 a
         name: "氟离子",
         color: 0x00ff00, // 绿色
         neighbours: [
