@@ -1,0 +1,91 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Roboto", sans-serif;
+}
+
+#root {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    gap: 20px;
+    box-sizing: border-box;
+    background-color: var(--md-sys-color-surface);
+}
+
+#canvas-container {
+    flex: 1;
+}
+
+#side-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-items: center;
+    margin: 10px;
+    padding: 20px;
+    box-sizing: border-box;
+    color: var(--md-sys-color-on-surface-variant);
+    background-color: var(--md-sys-color-surface-container-highest);
+    width: 15%;
+    gap: 16px;
+
+    border-radius: 24px;
+    overflow: hidden;
+}
+
+#controls {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+#lattice-atom-desc {
+    overflow: auto;
+    flex: 1;
+    min-height: 0;
+}
+
+@media screen and (max-width: 768px) {
+    #root {
+        flex-direction: column;
+    }
+
+    #canvas-container {
+        flex: 1;
+        min-height: 0;
+    }
+
+    #side-panel {
+        width: unset;
+        flex-direction: row;
+        overflow: visible; /* 改为 visible */
+        flex: 0 0 auto;
+        height: auto;
+        position: relative; /* 为绝对定位子元素提供参考 */
+        /* 保留原有的 padding 和 gap */
+        padding: 20px;
+        gap: 16px;
+        box-sizing: border-box; /* 确保 padding 包含在宽度内 */
+    }
+
+    #controls {
+        min-width: calc(50% - 8px); /* 考虑 gap 的一半 */
+        max-width: calc(50% - 8px); /* 考虑 gap 的一半 */
+        height: auto; /* 内容决定高度 */
+        flex: 0 0 auto;
+        /* 原有的 padding 会保留 */
+    }
+
+    #lattice-atom-desc {
+        position: absolute;
+        left: calc(50% + 8px); /* 50% + gap 的一半 = 从中间开始留出间隔 */
+        right: 20px; /* 等于 side-panel 的 padding-right */
+        top: 20px; /* 等于 side-panel 的 padding-top */
+        bottom: 20px; /* 等于 side-panel 的 padding-bottom */
+        overflow: auto;
+        /* 保留原有的背景色等样式 */
+        background-color: var(--md-sys-color-surface-container-highest);
+    }
+}
