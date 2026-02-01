@@ -8,7 +8,7 @@ export type NeighbourDef = AtomDef;
 export type NeighbourDefWithTags = AtomDefWithTags;
 
 export type LatticeTag = {
-  name: string;
+  name?: string;
   color: ColorRepresentation;
   radius: number;
   neighbours?: (NeighbourDef | NeighbourDefWithTags)[];
@@ -156,7 +156,7 @@ export function Lattice(lattice: LatticeProps) {
       const tagKey = selectedAtom.tags?.[lattice.mainTag];
       const tag = tagKey ? mainTagMap[tagKey] : null;
       
-      if (tag) {
+      if (tag && tag.name) {
         desc += `类型: ${tag.name}`;
       }
     }
@@ -199,6 +199,8 @@ export function Lattice(lattice: LatticeProps) {
       .map(({ neighbour, transformedOffset, neighbourPosition }) => {
         const atomDef: AtomDef = {
           position: neighbourPosition,
+          rotation: neighbour.rotation,
+          invert: neighbour.invert
         };
         
         // 如果是带标签的邻居，保留标签
