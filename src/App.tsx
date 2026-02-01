@@ -16,31 +16,7 @@ import Markdown from "react-markdown";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 
-// 屏幕阅读器专用样式
-const srOnlyStyle = `
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
-`;
-
 function App() {
-  // 注入屏幕阅读器样式
-  useEffect(() => {
-    const style = document.createElement('style');
-    style.textContent = srOnlyStyle;
-    document.head.appendChild(style);
-    return () => {
-      document.head.removeChild(style);
-    };
-  }, []);
   const ctrl = useRef<ArcballCtrls>(null!);
   const [filled, setFilled] = useState<boolean>(false);
   const [latticeKey, setLatticeKey] = useState<string>(() => {
