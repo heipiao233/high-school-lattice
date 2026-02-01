@@ -16,7 +16,31 @@ import Markdown from "react-markdown";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 
+// 屏幕阅读器专用样式
+const srOnlyStyle = `
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+`;
+
 function App() {
+  // 注入屏幕阅读器样式
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = srOnlyStyle;
+    document.head.appendChild(style);
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
   const ctrl = useRef<ArcballCtrls>(null!);
   const [filled, setFilled] = useState<boolean>(false);
   const [latticeKey, setLatticeKey] = useState<string>(() => {
@@ -43,7 +67,7 @@ function App() {
   const lattice = lattices.get(latticeKey)!;
   return (
     <>
-      <div id="canvas-container">
+      <div id="canvas-container" aria-label="3D晶格可视化区域" role="application">
         <Canvas scene={{ fog: new THREE.Fog("#242424", 0, 150) }}>
           <ambientLight color={0xffffff} intensity={0.5} />
           <directionalLight
@@ -71,44 +95,66 @@ function App() {
           <ArcballControls makeDefault ref={ctrl} />
         </Canvas>
       </div>
-      <div id="side-panel">
+      <div id="side-panel" role="complementary" aria-label="控制面板">
         <div id="side-panel-content">
-          <div id="controls">
+          <div id="controls" role="toolbar" aria-label="晶格控制工具栏">
             <MdOutlinedSelect
               id="lattice-select"
               value={latticeKey}
               onChange={(e) => setLatticeKey((e.target as any).value)}
+              aria-label="选择晶格类型"
+              aria-describedby="lattice-select-description"
             >
               {latticeTypes}
             </MdOutlinedSelect>
+            <div id="lattice-select-description" className="sr-only">
+              从下拉列表中选择要显示的晶格类型
+            </div>
             <MdOutlinedButton
               id="reset-camera-button"
               onClick={() => {
                 ctrl.current.reset();
               }}
+              aria-label="重置相机视角"
             >
               恢复视角
             </MdOutlinedButton>
-            <label style={{ display: "flex", alignItems: "center" }}>
-              <MdCheckbox
-                id="filled-checkbox"
-                checked={filled}
-                touch-target="wrapper"
-                onClick={() => {
-                  setFilled(!filled);
-                }}
-              />
-            填充
-            </label>
+            <div role="group" aria-label="填充选项">
+              <label 
+                htmlFor="filled-checkbox" 
+                style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+              >
+                <MdCheckbox
+                  id="filled-checkbox"
+                  checked={filled}
+                  touch-target="wrapper"
+                  onClick={() => {
+                    setFilled(!filled);
+                  }}
+                  aria-label="切换原子填充显示"
+                  aria-checked={filled}
+                  role="checkbox"
+                />
+                <span style={{ marginLeft: "8px" }}>填充</span>
+              </label>
+            </div>
           </div>
           {window.innerWidth > 768 && <MdDivider />}
-          <article id="lattice-atom-desc">
-            <h2>{lattice.name}</h2>
-            <Markdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>
-              {lattice.description}
-            </Markdown>
-            {selectedAtomDesc && <h2>所选原子</h2>}
-            {atomDesc}
+          <article id="lattice-atom-desc" aria-labelledby="lattice-title">
+            <h2 id="lattice-title">{lattice.name}</h2>
+            <div role="region" aria-label="晶格描述">
+              <Markdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>
+                {lattice.description}
+              </Markdown>
+            </div>
+            {selectedAtomDesc && (
+              <div role="region" aria-label="所选原子信息">
+                <h2>所选原子</h2>
+                <div aria-live="polite" aria-atomic="true">
+                  {atomDesc}
+                </div>
+              </div>
+            )}
           </article>
         </div>
       </div>
