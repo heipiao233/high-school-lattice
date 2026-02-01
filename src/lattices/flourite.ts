@@ -107,50 +107,54 @@ export default {
     {
       position: [0.25, 0.25, 0.25],
       tags: {
-        ion: "Fa",
+        ion: "F",
       },
     },
     {
       position: [0.25, -0.25, 0.25],
       tags: {
-        ion: "Fb",
+        ion: "F",
       },
+      invert: true,
     },
     {
       position: [-0.25, 0.25, 0.25],
       tags: {
-        ion: "Fb",
+        ion: "F",
       },
+      invert: true,
     },
     {
       position: [-0.25, -0.25, 0.25],
       tags: {
-        ion: "Fa",
+        ion: "F",
       },
     },
     {
       position: [0.25, 0.25, -0.25],
       tags: {
-        ion: "Fb",
+        ion: "F",
       },
+      invert: true,
     },
     {
       position: [0.25, -0.25, -0.25],
       tags: {
-        ion: "Fa",
+        ion: "F",
       },
     },
     {
       position: [-0.25, 0.25, -0.25],
       tags: {
-        ion: "Fa",
+        ion: "F",
       },
     },
     {
       position: [-0.25, -0.25, -0.25],
       tags: {
-        ion: "Fb",
+        ion: "F",
       },
+      invert: true,
     },
   ],
   mainTag: "ion",
@@ -162,38 +166,25 @@ export default {
         color: 0x0099ff, // 蓝色
         neighbours: [
           // 钙离子周围有8个氟离子（配位数为8）
-          { position: [0.25, 0.25, 0.25], tags: { ion: "Fb" } },
-          { position: [0.25, 0.25, -0.25], tags: { ion: "Fa" } },
-          { position: [0.25, -0.25, 0.25], tags: { ion: "Fa" } },
-          { position: [0.25, -0.25, -0.25], tags: { ion: "Fb" } },
-          { position: [-0.25, 0.25, 0.25], tags: { ion: "Fa" } },
-          { position: [-0.25, 0.25, -0.25], tags: { ion: "Fb" } },
-          { position: [-0.25, -0.25, 0.25], tags: { ion: "Fb" } },
-          { position: [-0.25, -0.25, -0.25], tags: { ion: "Fa" } },
+          { position: [0.25, 0.25, 0.25], tags: { ion: "F" } },
+          { position: [0.25, 0.25, -0.25], tags: { ion: "F" } },
+          { position: [0.25, -0.25, 0.25], tags: { ion: "F" } },
+          { position: [0.25, -0.25, -0.25], tags: { ion: "F" } },
+          { position: [-0.25, 0.25, 0.25], tags: { ion: "F" } },
+          { position: [-0.25, 0.25, -0.25], tags: { ion: "F" } },
+          { position: [-0.25, -0.25, 0.25], tags: { ion: "F" } },
+          { position: [-0.25, -0.25, -0.25], tags: { ion: "F" } },
         ],
       },
-      Fa: {
+      F: {
         radius: Math.sqrt(3) / 10, // 氟离子半径 = √3/10 ≈ 0.1732
         name: "氟离子",
         color: 0x00ff00, // 绿色
         neighbours: [
-          // 氟离子周围有4个钙离子（配位数为4）
           { position: [0.25, 0.25, 0.25], tags: { ion: "Ca" } },
           { position: [-0.25, 0.25, -0.25], tags: { ion: "Ca" } },
           { position: [-0.25, -0.25, 0.25], tags: { ion: "Ca" } },
           { position: [0.25, -0.25, -0.25], tags: { ion: "Ca" } },
-        ],
-      },
-      Fb: {
-        radius: Math.sqrt(3) / 10, // 氟离子半径 = √3/10 ≈ 0.1732
-        name: "氟离子",
-        color: 0x00ff00, // 绿色
-        neighbours: [
-          // 氟离子周围有4个钙离子（配位数为4）
-          { position: [-0.25, -0.25, -0.25], tags: { ion: "Ca" } },
-          { position: [0.25, -0.25, 0.25], tags: { ion: "Ca" } },
-          { position: [0.25, 0.25, -0.25], tags: { ion: "Ca" } },
-          { position: [-0.25, 0.25, 0.25], tags: { ion: "Ca" } },
         ],
       },
     },
