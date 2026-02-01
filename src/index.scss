@@ -30,8 +30,12 @@ body {
     width: min-content;
     min-width: 30%;
     gap: 16px;
-    overflow: auto;
+    overflow: hidden;
     border-radius: 24px;
+}
+
+#side-panel-content {
+    overflow: auto;
 }
 
 #controls {

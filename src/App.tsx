@@ -72,43 +72,45 @@ function App() {
         </Canvas>
       </div>
       <div id="side-panel">
-        <div id="controls">
-          <MdOutlinedSelect
-            id="lattice-select"
-            value={latticeKey}
-            onChange={(e) => setLatticeKey((e.target as any).value)}
-          >
-            {latticeTypes}
-          </MdOutlinedSelect>
-          <MdOutlinedButton
-            id="reset-camera-button"
-            onClick={() => {
-              ctrl.current.reset();
-            }}
-          >
-            恢复视角
-          </MdOutlinedButton>
-          <label style={{ display: "flex", alignItems: "center" }}>
-            <MdCheckbox
-              id="filled-checkbox"
-              checked={filled}
-              touch-target="wrapper"
+        <div id="side-panel-content">
+          <div id="controls">
+            <MdOutlinedSelect
+              id="lattice-select"
+              value={latticeKey}
+              onChange={(e) => setLatticeKey((e.target as any).value)}
+            >
+              {latticeTypes}
+            </MdOutlinedSelect>
+            <MdOutlinedButton
+              id="reset-camera-button"
               onClick={() => {
-                setFilled(!filled);
+                ctrl.current.reset();
               }}
-            />
+            >
+              恢复视角
+            </MdOutlinedButton>
+            <label style={{ display: "flex", alignItems: "center" }}>
+              <MdCheckbox
+                id="filled-checkbox"
+                checked={filled}
+                touch-target="wrapper"
+                onClick={() => {
+                  setFilled(!filled);
+                }}
+              />
             填充
-          </label>
+            </label>
+          </div>
+          {window.innerWidth > 768 && <MdDivider />}
+          <article id="lattice-atom-desc">
+            <h2>{lattice.name}</h2>
+            <Markdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>
+              {lattice.description}
+            </Markdown>
+            {selectedAtomDesc && <h2>所选原子</h2>}
+            {atomDesc}
+          </article>
         </div>
-        {window.innerWidth > 768 && <MdDivider />}
-        <article id="lattice-atom-desc">
-          <h2>{lattice.name}</h2>
-          <Markdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>
-            {lattice.description}
-          </Markdown>
-          {selectedAtomDesc && <h2>所选原子</h2>}
-          {atomDesc}
-        </article>
       </div>
     </>
   );
