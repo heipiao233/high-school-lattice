@@ -125,7 +125,7 @@ export default {
       layer_b: {
         radius: Math.SQRT2 / 4,
         name: "B 层",
-        color: 0x00cc00,
+        color: 0x33aa77,
         neighbours: [
           { position: [0, -0.5, 0.5], tags: { layer: "layer_b" } },
           { position: [-0.5, 0, 0.5], tags: { layer: "layer_b" } },
@@ -145,7 +145,7 @@ export default {
       layer_c: {
         radius: Math.SQRT2 / 4,
         name: "C 层",
-        color: 0x0000ff,
+        color: 0xaa0022,
         neighbours: [
           { position: [0, -0.5, 0.5], tags: { layer: "layer_c" } },
           { position: [-0.5, 0, 0.5], tags: { layer: "layer_c" } },
