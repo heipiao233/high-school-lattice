@@ -5,6 +5,7 @@ import flourite from "./flourite";
 import sc from "./sc";
 import hcp_single from "./hcp_single";
 import hcp_super from "./hcp_super";
+import diamond from "./diamond";
 
 export default new Map<string, LatticeDef>([
   ["fcc", fcc],
@@ -13,4 +14,5 @@ export default new Map<string, LatticeDef>([
   ["flourite", flourite],
   ["hcp_single", hcp_single],
   ["hcp_super", hcp_super],
+  ["diamond", diamond]
 ]);
