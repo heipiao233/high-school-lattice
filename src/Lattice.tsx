@@ -2,6 +2,7 @@ import type { ColorRepresentation } from "three";
 import * as THREE from "three";
 import { Atom, type AtomDef, type AtomDefWithTags } from "./Atom";
 import { useState, useMemo, useEffect } from "react";
+import { Line } from "@react-three/drei";
 
 export type NeighbourDef = AtomDef;
 
@@ -36,6 +37,7 @@ export type LatticeDef = LatticeDefWithTags | LatticeDefWithoutTags;
 
 export type LatticeProps = LatticeDef & {
   filled: boolean;
+  showConnections?: boolean;
   setAtomDesc?: (desc: string) => void;
 };
 
@@ -72,7 +74,7 @@ function applyTransformToOffset(
   rotation?: [number, number, number],
   invert?: boolean
 ): [number, number, number] {
-  let vec = new THREE.Vector3(offset[0], offset[1], offset[2]);
+  const vec = new THREE.Vector3(offset[0], offset[1], offset[2]);
   // 1. 应用旋转
   if (rotation) {
     const [rx, ry, rz] = rotation;
@@ -134,10 +136,15 @@ function getNeighboursSource(
 
 export function Lattice(lattice: LatticeProps) {
   const [selectedAtom, setSelectedAtom] = useState<AtomDef | null>(null);
+  const { showConnections = false } = lattice;
 
   // 重置选中的原子当晶格改变时
   useEffect(() => {
-    setSelectedAtom(null);
+    // 使用requestAnimationFrame避免同步setState
+    const timer = requestAnimationFrame(() => {
+      setSelectedAtom(null);
+    });
+    return () => cancelAnimationFrame(timer);
   }, [lattice.name, lattice.setAtomDesc]);
 
   // 更新原子描述
@@ -162,7 +169,7 @@ export function Lattice(lattice: LatticeProps) {
     }
 
     lattice.setAtomDesc(desc);
-  }, [selectedAtom, lattice.setAtomDesc]);
+  }, [selectedAtom, lattice.setAtomDesc, lattice]);
 
   // 原子位置集合（用于快速查找）
   const atomPositionSet = useMemo(() => {
@@ -212,6 +219,62 @@ export function Lattice(lattice: LatticeProps) {
       });
   }, [selectedAtom, lattice, atomPositionSet]);
 
+  // 计算所有原子之间的连接线
+  const connectionLines = useMemo(() => {
+    if (!showConnections) return [];
+
+    const lines: Array<{
+      start: [number, number, number];
+      end: [number, number, number];
+      color: THREE.ColorRepresentation;
+    }> = [];
+
+    // 遍历所有原子
+    for (let i = 0; i < lattice.atoms.length; i++) {
+      const atom = lattice.atoms[i];
+      const tag = resolveTagForAtom(atom, lattice);
+      const neighboursSource = getNeighboursSource(atom, lattice);
+
+      if (!neighboursSource) continue;
+
+      // 计算当前原子的所有邻居位置
+      for (const neighbour of neighboursSource) {
+        const transformedOffset = applyTransformToOffset(
+          neighbour.position,
+          atom.rotation,
+          atom.invert
+        );
+        const neighbourPosition: [number, number, number] = [
+          atom.position[0] + transformedOffset[0],
+          atom.position[1] + transformedOffset[1],
+          atom.position[2] + transformedOffset[2],
+        ];
+
+        // 检查邻居位置是否在原子列表中
+        if (atomPositionSet.has(positionToString(neighbourPosition))) {
+          // 获取邻居原子的标签颜色
+          const neighbourAtom = lattice.atoms.find(a =>
+            positionToString(a.position) === positionToString(neighbourPosition)
+          );
+          const neighbourTag = neighbourAtom ? resolveTagForAtom(neighbourAtom, lattice) : tag;
+
+          // 使用两个原子颜色的混合色
+          const color = new THREE.Color(tag.color);
+          const neighbourColor = new THREE.Color(neighbourTag.color);
+          color.lerp(neighbourColor, 0.5);
+
+          lines.push({
+            start: atom.position,
+            end: neighbourPosition,
+            color: color.getHex(),
+          });
+        }
+      }
+    }
+
+    return lines;
+  }, [lattice, atomPositionSet, showConnections]);
+
   // 渲染单个原子
   const renderAtom = (atom: AtomDef, isSelected: boolean) => {
     const tag = resolveTagForAtom(atom, lattice);
@@ -249,6 +312,11 @@ export function Lattice(lattice: LatticeProps) {
       {selectedAtom && !isAtomInList(selectedAtom) &&
         renderAtom(selectedAtom, true)
       }
+
+      {/* 渲染连接线 */}
+      {showConnections && connectionLines.map((line, index) => (
+        <Line points={[line.start, line.end]} color={line.color} key={index} />
+      ))}
     </>
   );
 }

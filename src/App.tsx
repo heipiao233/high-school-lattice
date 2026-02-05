@@ -19,6 +19,7 @@ import rehypeKatex from "rehype-katex";
 function App() {
   const ctrl = useRef<ArcballCtrls>(null!);
   const [filled, setFilled] = useState<boolean>(false);
+  const [showConnections, setShowConnections] = useState<boolean>(false);
   const [latticeKey, setLatticeKey] = useState<string>(() => {
     const hash = window.location.hash.slice(1);
     return lattices.has(hash) ? hash : "fcc";
@@ -66,6 +67,7 @@ function App() {
           <Lattice
             {...lattice}
             filled={filled}
+            showConnections={showConnections}
             setAtomDesc={setSelectedAtomDesc}
           />
           <ArcballControls makeDefault ref={ctrl} />
@@ -77,7 +79,7 @@ function App() {
             <MdOutlinedSelect
               id="lattice-select"
               value={latticeKey}
-              onChange={(e) => setLatticeKey((e.target as any).value)}
+              onChange={(e) => setLatticeKey(e.target.value)}
               aria-label="选择晶格类型"
               aria-describedby="lattice-select-description"
             >
@@ -96,8 +98,8 @@ function App() {
               恢复视角
             </MdOutlinedButton>
             <div role="group" aria-label="填充选项">
-              <label 
-                htmlFor="filled-checkbox" 
+              <label
+                htmlFor="filled-checkbox"
                 style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
               >
                 <MdCheckbox
@@ -112,6 +114,25 @@ function App() {
                   role="checkbox"
                 />
                 <span style={{ marginLeft: "8px" }}>填充</span>
+              </label>
+            </div>
+            <div role="group" aria-label="连接选项">
+              <label
+                htmlFor="connections-checkbox"
+                style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+              >
+                <MdCheckbox
+                  id="connections-checkbox"
+                  checked={showConnections}
+                  touch-target="wrapper"
+                  onClick={() => {
+                    setShowConnections(!showConnections);
+                  }}
+                  aria-label="切换相邻原子连接显示"
+                  aria-checked={showConnections}
+                  role="checkbox"
+                />
+                <span style={{ marginLeft: "8px" }}>连接相邻原子</span>
               </label>
             </div>
           </div>
