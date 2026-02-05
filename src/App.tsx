@@ -97,7 +97,7 @@ function App() {
             >
               恢复视角
             </MdOutlinedButton>
-            <div role="group" aria-label="填充选项">
+            <div role="group" aria-label="填充选项" id="fill-option">
               <label
                 htmlFor="filled-checkbox"
                 style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
@@ -116,7 +116,7 @@ function App() {
                 <span style={{ marginLeft: "8px" }}>填充</span>
               </label>
             </div>
-            <div role="group" aria-label="连接选项">
+            <div role="group" aria-label="连接选项" id="connection-option">
               <label
                 htmlFor="connections-checkbox"
                 style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
