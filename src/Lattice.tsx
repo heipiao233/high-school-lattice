@@ -224,12 +224,12 @@ export function Lattice(lattice: LatticeProps) {
   // 所有显示的原子集合（包括原始原子、选中的原子和邻居原子）
   const allAtomsForConnections = useMemo(() => {
     const atoms = [...lattice.atoms];
-    
+
     // 添加选中的原子（如果不在原始原子列表中）
     if (selectedAtom && !atomPositionSet.has(positionToString(selectedAtom.position))) {
       atoms.push(selectedAtom);
     }
-    
+
     // 添加邻居原子（如果不在原子列表中）
     for (const atom of neighbourAtoms) {
       const atomStr = positionToString(atom.position);
@@ -237,7 +237,7 @@ export function Lattice(lattice: LatticeProps) {
         atoms.push(atom);
       }
     }
-    
+
     return atoms;
   }, [lattice.atoms, selectedAtom, atomPositionSet, neighbourAtoms]);
 
@@ -277,7 +277,7 @@ export function Lattice(lattice: LatticeProps) {
         const neighbourAtom = allAtomsForConnections.find(a =>
           positionToString(a.position) === neighbourPositionStr
         );
-        
+
         if (neighbourAtom) {
           // 获取邻居原子的标签颜色
           const neighbourTag = resolveTagForAtom(neighbourAtom, lattice);
