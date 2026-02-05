@@ -7,11 +7,11 @@ export default {
 
   一个这样的晶胞含 12 个离子，其中钙离子（Ca²⁺）4 个（面心立方顶点和面心，每个顶点为 1/8 个，每个面心为 1/2 个），氟离子（F⁻）8 个（全部位于四面体空隙中）。配位数为 8 和 4，即每个 Ca²⁺ 被 8 个 F⁻ 包围，每个 F⁻ 被 4 个 Ca²⁺ 包围，原子间距为 $\sqrt{3}a/4$（Ca-F）。
 
-  计算堆垛效率（设晶胞参数为 $a$，离子半径分别为 $r_+$ 和 $r_-$）：
-  $$\text{堆垛效率} = \frac{\text{离子总体积}}{\text{晶胞体积}} = \frac{4 \times \frac{4}{3} \pi r_+^3 + 8 \times \frac{4}{3} \pi r_-^3}{a^3} = \frac{16 \pi (r_+^3 + 2 r_-^3)}{3 a^3}$$
+  计算空间利用率（设晶胞参数为 $a$，离子半径分别为 $r_+$ 和 $r_-$）：
+  $$\text{空间利用率} = \frac{\text{离子总体积}}{\text{晶胞体积}} = \frac{4 \times \frac{4}{3} \pi r_+^3 + 8 \times \frac{4}{3} \pi r_-^3}{a^3} = \frac{16 \pi (r_+^3 + 2 r_-^3)}{3 a^3}$$
 
   对于 CaF₂，有数据称，$r_{\text{Ca}^{2+}} \approx 112 \text{pm}$，$r_{\text{F}^-} \approx 131 \text{pm}$，$a \approx 546 \text{pm}$，代入计算得：
-  $$\text{堆垛效率} \approx \frac{16 \pi (112^3 + 2 \times 131^3)}{3 \times 546^3} \approx 60.74\%$$
+  $$\text{空间利用率} \approx \frac{16 \pi (112^3 + 2 \times 131^3)}{3 \times 546^3} \approx 60.74\%$$
 
   具有萤石型结构的晶体包括萤石（CaF₂）、锶氟石（SrF₂）、钡氟石（BaF₂）以及二氧化铀（UO₂）等。还有阴离子与阳离子位置互换的反结构，称为反萤石结构，见于氧化锂（Li₂O）、氧化钠（Na₂O）等。`,
   atoms: [

@@ -9,8 +9,8 @@ export default {
 
   一个这样的晶胞含 4 个原子。位于顶点的原子每个为 1/8 个，位于面心的原子每个为 1/2 个。配位数为 12，最近邻原子间距为 $\frac{\sqrt{2}}{2}a$（原子半径为 $\frac{\sqrt{2}}{4}a$）。
 
-  计算堆垛效率（设晶胞参数为 $a$）：
-  $$\text{堆垛效率} = \frac{\text{原子体积}}{\text{晶胞体积}} = \frac{4 \times \frac{4}{3} \pi (\frac{\sqrt{2}a}{4})^3}{a^3} = \frac{\pi \sqrt{2}}{6} \approx 74\%$$
+  计算空间利用率（设晶胞参数为 $a$）：
+  $$\text{空间利用率} = \frac{\text{原子体积}}{\text{晶胞体积}} = \frac{4 \times \frac{4}{3} \pi (\frac{\sqrt{2}a}{4})^3}{a^3} = \frac{\pi \sqrt{2}}{6} \approx 74\%$$
 
   这一结构的常见金属有铝、铜、镍、金、银、铅以及铁（高温下的 γ‑Fe）等。`,
   atoms: [

@@ -7,8 +7,8 @@ export default {
 
   一个这样的晶胞含 1 个原子。位于顶点的原子每个为 1/8 个。配位数为 6，最近邻原子间距为 $a$（原子半径为 $\frac{a}{2}$）。
 
-  计算堆垛效率（设晶胞参数为 $a$）：
-  $$\text{堆垛效率} = \frac{\text{原子体积}}{\text{晶胞体积}} = \frac{\frac{4}{3} \pi (\frac{a}{2})^3}{a^3} = \frac{\pi}{6} \approx 52\%$$
+  计算空间利用率（设晶胞参数为 $a$）：
+  $$\text{空间利用率} = \frac{\text{原子体积}}{\text{晶胞体积}} = \frac{\frac{4}{3} \pi (\frac{a}{2})^3}{a^3} = \frac{\pi}{6} \approx 52\%$$
 
   这一结构的金属有钋（Po）。`,
   atoms: [
