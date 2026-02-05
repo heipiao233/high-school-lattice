@@ -178,7 +178,7 @@ export function Lattice(lattice: LatticeProps) {
     );
   }, [lattice.atoms]);
 
-  // 计算邻居原子
+  // 计算邻居原子（不包括已经在显示的原子）
   const neighbourAtoms = useMemo(() => {
     if (!selectedAtom) return [];
 
@@ -219,6 +219,28 @@ export function Lattice(lattice: LatticeProps) {
       });
   }, [selectedAtom, lattice, atomPositionSet]);
 
+
+
+  // 所有显示的原子集合（包括原始原子、选中的原子和邻居原子）
+  const allAtomsForConnections = useMemo(() => {
+    const atoms = [...lattice.atoms];
+    
+    // 添加选中的原子（如果不在原始原子列表中）
+    if (selectedAtom && !atomPositionSet.has(positionToString(selectedAtom.position))) {
+      atoms.push(selectedAtom);
+    }
+    
+    // 添加邻居原子（如果不在原子列表中）
+    for (const atom of neighbourAtoms) {
+      const atomStr = positionToString(atom.position);
+      if (!atomPositionSet.has(atomStr) && !atoms.some(a => positionToString(a.position) === atomStr)) {
+        atoms.push(atom);
+      }
+    }
+    
+    return atoms;
+  }, [lattice.atoms, selectedAtom, atomPositionSet, neighbourAtoms]);
+
   // 计算所有原子之间的连接线
   const connectionLines = useMemo(() => {
     if (!showConnections) return [];
@@ -230,8 +252,8 @@ export function Lattice(lattice: LatticeProps) {
     }> = [];
 
     // 遍历所有原子
-    for (let i = 0; i < lattice.atoms.length; i++) {
-      const atom = lattice.atoms[i];
+    for (let i = 0; i < allAtomsForConnections.length; i++) {
+      const atom = allAtomsForConnections[i];
       const tag = resolveTagForAtom(atom, lattice);
       const neighboursSource = getNeighboursSource(atom, lattice);
 
@@ -251,12 +273,14 @@ export function Lattice(lattice: LatticeProps) {
         ];
 
         // 检查邻居位置是否在原子列表中
-        if (atomPositionSet.has(positionToString(neighbourPosition))) {
+        const neighbourPositionStr = positionToString(neighbourPosition);
+        const neighbourAtom = allAtomsForConnections.find(a =>
+          positionToString(a.position) === neighbourPositionStr
+        );
+        
+        if (neighbourAtom) {
           // 获取邻居原子的标签颜色
-          const neighbourAtom = lattice.atoms.find(a =>
-            positionToString(a.position) === positionToString(neighbourPosition)
-          );
-          const neighbourTag = neighbourAtom ? resolveTagForAtom(neighbourAtom, lattice) : tag;
+          const neighbourTag = resolveTagForAtom(neighbourAtom, lattice);
 
           // 使用两个原子颜色的混合色
           const color = new THREE.Color(tag.color);
@@ -273,7 +297,7 @@ export function Lattice(lattice: LatticeProps) {
     }
 
     return lines;
-  }, [lattice, atomPositionSet, showConnections]);
+  }, [allAtomsForConnections, lattice, showConnections]);
 
   // 渲染单个原子
   const renderAtom = (atom: AtomDef, isSelected: boolean) => {
@@ -291,31 +315,22 @@ export function Lattice(lattice: LatticeProps) {
     );
   };
 
-  // 检查原子是否在原子列表中
-  const isAtomInList = (atom: AtomDef) => {
-    return atomPositionSet.has(positionToString(atom.position));
-  };
+
 
   return (
     <>
-      {/* 渲染所有实际原子 */}
-      {lattice.atoms.map((atom) =>
+      {/* 渲染所有原子 */}
+      {allAtomsForConnections.map((atom) =>
         renderAtom(atom, selectedAtom === atom)
       )}
 
-      {/* 渲染潜在邻居 */}
-      {neighbourAtoms.map((atom) =>
-        renderAtom(atom, selectedAtom?.position === atom.position)
-      )}
-
-      {/* 渲染选中的原子（如果不在原子列表中） */}
-      {selectedAtom && !isAtomInList(selectedAtom) &&
-        renderAtom(selectedAtom, true)
-      }
-
       {/* 渲染连接线 */}
       {showConnections && connectionLines.map((line, index) => (
-        <Line points={[line.start, line.end]} color={line.color} key={index} />
+        <Line
+          key={`${positionToString(line.start)}-${positionToString(line.end)}-${index}`}
+          points={[line.start, line.end]}
+          color={line.color}
+        />
       ))}
     </>
   );
