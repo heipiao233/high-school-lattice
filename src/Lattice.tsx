@@ -94,20 +94,20 @@ function resolveTagForAtom(
   if (isLatticeWithTags(lattice) && isAtomWithTags(atom)) {
     const mainTagMap = getMainTagMap(lattice);
     const tagKey = atom.tags?.[lattice.mainTag];
-    
+
     if (tagKey && mainTagMap[tagKey]) {
       return mainTagMap[tagKey];
     }
-    
+
     if (mainTagMap["default"]) {
       return mainTagMap["default"];
     }
-    
+
     const firstTag = Object.values(mainTagMap)[0];
     if (firstTag) {
       return firstTag;
     }
-    
+
     // 默认标签
     return { name: "unknown", color: 0x888888, radius: 0.1 };
   } else if (isLatticeWithoutTags(lattice)) {
@@ -118,7 +118,7 @@ function resolveTagForAtom(
       neighbours: lattice.neighbours,
     };
   }
-  
+
   // 默认情况
   return { name: "default", color: 0x888888, radius: 0.1 };
 }
@@ -150,17 +150,17 @@ export function Lattice(lattice: LatticeProps) {
     }
 
     let desc = `坐标: (${selectedAtom.position.join(", ")})\n`;
-    
+
     if (isLatticeWithTags(lattice) && isAtomWithTags(selectedAtom)) {
       const mainTagMap = getMainTagMap(lattice);
       const tagKey = selectedAtom.tags?.[lattice.mainTag];
       const tag = tagKey ? mainTagMap[tagKey] : null;
-      
+
       if (tag && tag.name) {
         desc += `类型: ${tag.name}`;
       }
     }
-    
+
     lattice.setAtomDesc(desc);
   }, [selectedAtom, lattice.setAtomDesc]);
 
@@ -191,23 +191,23 @@ export function Lattice(lattice: LatticeProps) {
           selectedAtom.position[1] + transformedOffset[1],
           selectedAtom.position[2] + transformedOffset[2],
         ];
-        return { neighbour, transformedOffset, neighbourPosition };
+        return { neighbour, neighbourPosition };
       })
-      .filter(({ neighbourPosition }) => 
+      .filter(({ neighbourPosition }) =>
         !atomPositionSet.has(positionToString(neighbourPosition))
       )
-      .map(({ neighbour, transformedOffset, neighbourPosition }) => {
+      .map(({ neighbour, neighbourPosition }) => {
         const atomDef: AtomDef = {
           position: neighbourPosition,
           rotation: neighbour.rotation,
           invert: neighbour.invert
         };
-        
+
         // 如果是带标签的邻居，保留标签
         if (isNeighbourWithTags(neighbour)) {
           (atomDef as AtomDefWithTags).tags = neighbour.tags;
         }
-        
+
         return atomDef;
       });
   }, [selectedAtom, lattice, atomPositionSet]);
@@ -236,7 +236,7 @@ export function Lattice(lattice: LatticeProps) {
   return (
     <>
       {/* 渲染所有实际原子 */}
-      {lattice.atoms.map((atom) => 
+      {lattice.atoms.map((atom) =>
         renderAtom(atom, selectedAtom === atom)
       )}
 
