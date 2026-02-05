@@ -15,72 +15,74 @@ export default {
   常见的具有 HCP 结构的金属有镁、钛、锌、铍、镉等。`,
   atoms: [
     // 底层（A 层）七个原子：中心 + 六个顶点，y = -c/2
-    { position: [0, -Math.sqrt(8 / 3) / 2, 0], tags: { layer: "hcp_inverse_neighbour" } },
-    { position: [1, -Math.sqrt(8 / 3) / 2, 0], tags: { layer: "hcp_inverse_neighbour" } },
-    { position: [0.5, -Math.sqrt(8 / 3) / 2, Math.sqrt(3) / 2], tags: { layer: "hcp_inverse_neighbour" } },
-    { position: [-0.5, -Math.sqrt(8 / 3) / 2, Math.sqrt(3) / 2], tags: { layer: "hcp_inverse_neighbour" } },
-    { position: [-1, -Math.sqrt(8 / 3) / 2, 0], tags: { layer: "hcp_inverse_neighbour" } },
-    { position: [-0.5, -Math.sqrt(8 / 3) / 2, -Math.sqrt(3) / 2], tags: { layer: "hcp_inverse_neighbour" } },
-    { position: [0.5, -Math.sqrt(8 / 3) / 2, -Math.sqrt(3) / 2], tags: { layer: "hcp_inverse_neighbour" } },
+    { position: [0, -Math.sqrt(8 / 3) / 2, 0], tags: { layer: "A" } },
+    { position: [1, -Math.sqrt(8 / 3) / 2, 0], tags: { layer: "A" } },
+    { position: [0.5, -Math.sqrt(8 / 3) / 2, Math.sqrt(3) / 2], tags: { layer: "A" } },
+    { position: [-0.5, -Math.sqrt(8 / 3) / 2, Math.sqrt(3) / 2], tags: { layer: "A" } },
+    { position: [-1, -Math.sqrt(8 / 3) / 2, 0], tags: { layer: "A" } },
+    { position: [-0.5, -Math.sqrt(8 / 3) / 2, -Math.sqrt(3) / 2], tags: { layer: "A" } },
+    { position: [0.5, -Math.sqrt(8 / 3) / 2, -Math.sqrt(3) / 2], tags: { layer: "A" } },
 
     // 中间层（B 层）三个原子，呈等边三角形，y = 0
-    { position: [0, 0, Math.sqrt(3) / 3], tags: { layer: "hcp" } },
-    { position: [0.5, 0, -Math.sqrt(3) / 6], tags: { layer: "hcp" } },
-    { position: [-0.5, 0, -Math.sqrt(3) / 6], tags: { layer: "hcp" } },
+    { position: [0, 0, Math.sqrt(3) / 3], tags: { layer: "B" } },
+    { position: [0.5, 0, -Math.sqrt(3) / 6], tags: { layer: "B" } },
+    { position: [-0.5, 0, -Math.sqrt(3) / 6], tags: { layer: "B" } },
 
     // 顶层（A 层）七个原子，y = c/2
-    { position: [0, Math.sqrt(8 / 3) / 2, 0], tags: { layer: "hcp_inverse_neighbour" } },
-    { position: [1, Math.sqrt(8 / 3) / 2, 0], tags: { layer: "hcp_inverse_neighbour" } },
-    { position: [0.5, Math.sqrt(8 / 3) / 2, Math.sqrt(3) / 2], tags: { layer: "hcp_inverse_neighbour" } },
-    { position: [-0.5, Math.sqrt(8 / 3) / 2, Math.sqrt(3) / 2], tags: { layer: "hcp_inverse_neighbour" } },
-    { position: [-1, Math.sqrt(8 / 3) / 2, 0], tags: { layer: "hcp_inverse_neighbour" } },
-    { position: [-0.5, Math.sqrt(8 / 3) / 2, -Math.sqrt(3) / 2], tags: { layer: "hcp_inverse_neighbour" } },
-    { position: [0.5, Math.sqrt(8 / 3) / 2, -Math.sqrt(3) / 2], tags: { layer: "hcp_inverse_neighbour" } },
+    { position: [0, Math.sqrt(8 / 3) / 2, 0], tags: { layer: "A" } },
+    { position: [1, Math.sqrt(8 / 3) / 2, 0], tags: { layer: "A" } },
+    { position: [0.5, Math.sqrt(8 / 3) / 2, Math.sqrt(3) / 2], tags: { layer: "A" } },
+    { position: [-0.5, Math.sqrt(8 / 3) / 2, Math.sqrt(3) / 2], tags: { layer: "A" } },
+    { position: [-1, Math.sqrt(8 / 3) / 2, 0], tags: { layer: "A" } },
+    { position: [-0.5, Math.sqrt(8 / 3) / 2, -Math.sqrt(3) / 2], tags: { layer: "A" } },
+    { position: [0.5, Math.sqrt(8 / 3) / 2, -Math.sqrt(3) / 2], tags: { layer: "A" } },
   ],
   mainTag: "layer",
   tags: {
     layer: {
-      hcp: {
-        color: 0x00ccff,
-        radius: 0.5,
-        neighbours: [
-          // 同一层（6 个）
-          { position: [1, 0, 0], tags: { layer: "hcp" } },
-          { position: [0.5, 0, Math.sqrt(3) / 2], tags: { layer: "hcp" }  },
-          { position: [-0.5, 0, Math.sqrt(3) / 2], tags: { layer: "hcp" }  },
-          { position: [-1, 0, 0], tags: { layer: "hcp" }  },
-          { position: [-0.5, 0, -Math.sqrt(3) / 2], tags: { layer: "hcp" }  },
-          { position: [0.5, 0, -Math.sqrt(3) / 2], tags: { layer: "hcp" }  },
-          // 上层（3 个）
-          { position: [0.5, Math.sqrt(8 / 3) / 2, Math.sqrt(3) / 6], tags: { layer: "hcp_inverse_neighbour" }  },
-          { position: [-0.5, Math.sqrt(8 / 3) / 2, Math.sqrt(3) / 6], tags: { layer: "hcp_inverse_neighbour" }  },
-          { position: [0, Math.sqrt(8 / 3) / 2, -Math.sqrt(3) / 3], tags: { layer: "hcp_inverse_neighbour" }  },
-          // 下层（3 个）
-          { position: [0.5, -Math.sqrt(8 / 3) / 2, Math.sqrt(3) / 6], tags: { layer: "hcp_inverse_neighbour" }  },
-          { position: [-0.5, -Math.sqrt(8 / 3) / 2, Math.sqrt(3) / 6], tags: { layer: "hcp_inverse_neighbour" }  },
-          { position: [0, -Math.sqrt(8 / 3) / 2, -Math.sqrt(3) / 3], tags: { layer: "hcp_inverse_neighbour" }  },
-        ],
-      },
-      hcp_inverse_neighbour: {
-          color: 0x00ccff,
+      A: {
+          color: 0x77ff00,
+          name: "A 层",
           radius: 0.5,
           neighbours: [
               // 同一层（6 个）
-              { position: [1, 0, 0], tags: { layer: "hcp_inverse_neighbour" } },
-              { position: [0.5, 0, Math.sqrt(3) / 2], tags: { layer: "hcp_inverse_neighbour" } },
-              { position: [-0.5, 0, Math.sqrt(3) / 2], tags: { layer: "hcp_inverse_neighbour" } },
-              { position: [-1, 0, 0], tags: { layer: "hcp_inverse_neighbour" } },
-              { position: [-0.5, 0, -Math.sqrt(3) / 2], tags: { layer: "hcp_inverse_neighbour" } },
-              { position: [0.5, 0, -Math.sqrt(3) / 2], tags: { layer: "hcp_inverse_neighbour" } },
+              { position: [1, 0, 0], tags: { layer: "A" } },
+              { position: [0.5, 0, Math.sqrt(3) / 2], tags: { layer: "A" } },
+              { position: [-0.5, 0, Math.sqrt(3) / 2], tags: { layer: "A" } },
+              { position: [-1, 0, 0], tags: { layer: "A" } },
+              { position: [-0.5, 0, -Math.sqrt(3) / 2], tags: { layer: "A" } },
+              { position: [0.5, 0, -Math.sqrt(3) / 2], tags: { layer: "A" } },
               // 上层（3 个）
-              { position: [-0.5, Math.sqrt(8 / 3) / 2, -Math.sqrt(3) / 6], tags: { layer: "hcp" } },
-              { position: [0.5, Math.sqrt(8 / 3) / 2, -Math.sqrt(3) / 6], tags: { layer: "hcp" } },
-              { position: [0, Math.sqrt(8 / 3) / 2, Math.sqrt(3) / 3], tags: { layer: "hcp" } },
+              { position: [-0.5, Math.sqrt(8 / 3) / 2, -Math.sqrt(3) / 6], tags: { layer: "B" } },
+              { position: [0.5, Math.sqrt(8 / 3) / 2, -Math.sqrt(3) / 6], tags: { layer: "B" } },
+              { position: [0, Math.sqrt(8 / 3) / 2, Math.sqrt(3) / 3], tags: { layer: "B" } },
               // 下层（3 个）
-              { position: [-0.5, -Math.sqrt(8 / 3) / 2, -Math.sqrt(3) / 6], tags: { layer: "hcp" } },
-              { position: [0.5, -Math.sqrt(8 / 3) / 2, -Math.sqrt(3) / 6], tags: { layer: "hcp" } },
-              { position: [0, -Math.sqrt(8 / 3) / 2, Math.sqrt(3) / 3], tags: { layer: "hcp" } },
+              { position: [-0.5, -Math.sqrt(8 / 3) / 2, -Math.sqrt(3) / 6], tags: { layer: "B" } },
+              { position: [0.5, -Math.sqrt(8 / 3) / 2, -Math.sqrt(3) / 6], tags: { layer: "B" } },
+              { position: [0, -Math.sqrt(8 / 3) / 2, Math.sqrt(3) / 3], tags: { layer: "B" } },
           ],
+      },
+      B: {
+        color: 0x00ccff,
+        name: "B 层",
+        radius: 0.5,
+        neighbours: [
+          // 同一层（6 个）
+          { position: [1, 0, 0], tags: { layer: "B" } },
+          { position: [0.5, 0, Math.sqrt(3) / 2], tags: { layer: "B" }  },
+          { position: [-0.5, 0, Math.sqrt(3) / 2], tags: { layer: "B" }  },
+          { position: [-1, 0, 0], tags: { layer: "B" }  },
+          { position: [-0.5, 0, -Math.sqrt(3) / 2], tags: { layer: "B" }  },
+          { position: [0.5, 0, -Math.sqrt(3) / 2], tags: { layer: "B" }  },
+          // 上层（3 个）
+          { position: [0.5, Math.sqrt(8 / 3) / 2, Math.sqrt(3) / 6], tags: { layer: "A" }  },
+          { position: [-0.5, Math.sqrt(8 / 3) / 2, Math.sqrt(3) / 6], tags: { layer: "A" }  },
+          { position: [0, Math.sqrt(8 / 3) / 2, -Math.sqrt(3) / 3], tags: { layer: "A" }  },
+          // 下层（3 个）
+          { position: [0.5, -Math.sqrt(8 / 3) / 2, Math.sqrt(3) / 6], tags: { layer: "A" }  },
+          { position: [-0.5, -Math.sqrt(8 / 3) / 2, Math.sqrt(3) / 6], tags: { layer: "A" }  },
+          { position: [0, -Math.sqrt(8 / 3) / 2, -Math.sqrt(3) / 3], tags: { layer: "A" }  },
+        ],
       },
     },
   },
