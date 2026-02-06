@@ -157,6 +157,12 @@ export default {
       invert: true,
     },
   ],
+  borders: [
+    [0, 1, 5, 4],
+    [1, 3, 7, 5],
+    [3, 2, 6, 7],
+    [2, 0, 4, 6]
+  ],
   mainTag: "ion",
   tags: {
     ion: {

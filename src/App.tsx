@@ -20,6 +20,7 @@ function App() {
   const ctrl = useRef<ArcballCtrls>(null!);
   const [filled, setFilled] = useState<boolean>(false);
   const [showConnections, setShowConnections] = useState<boolean>(false);
+  const [showBorders, setShowBorders] = useState<boolean>(false);
   const [latticeKey, setLatticeKey] = useState<string>(() => {
     const hash = window.location.hash.slice(1);
     return lattices.has(hash) ? hash : "fcc";
@@ -68,6 +69,7 @@ function App() {
             {...lattice}
             filled={filled}
             showConnections={showConnections}
+            showBorders={showBorders}
             setAtomDesc={setSelectedAtomDesc}
           />
           <ArcballControls makeDefault ref={ctrl} />
@@ -133,6 +135,25 @@ function App() {
                   role="checkbox"
                 />
                 <span style={{ marginLeft: "8px" }}>连接相邻原子</span>
+              </label>
+            </div>
+            <div role="group" aria-label="边框选项" id="border-option">
+              <label
+                htmlFor="border-checkbox"
+                style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+              >
+                <MdCheckbox
+                  id="border-checkbox"
+                  checked={showBorders}
+                  touch-target="wrapper"
+                  onClick={() => {
+                    setShowBorders(!showBorders);
+                  }}
+                  aria-label="切换边框显示"
+                  aria-checked={showBorders}
+                  role="checkbox"
+                />
+                <span style={{ marginLeft: "8px" }}>显示边框</span>
               </label>
             </div>
           </div>

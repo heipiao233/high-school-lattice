@@ -24,6 +24,12 @@ export default {
       { position: [0.5, Math.sqrt(8 / 3) / 2, Math.sqrt(3) / 2], tags: { layer: "hcp_inverse_neighbour" } },
       { position: [-0.5, Math.sqrt(8 / 3) / 2, Math.sqrt(3) / 2], tags: { layer: "hcp_inverse_neighbour" } },
   ],
+  borders: [
+    [0, 1, 2, 3],
+    [1, 6, 7, 2],
+    [6, 5, 8, 7],
+    [5, 0, 3, 8]
+  ],
   mainTag: "layer",
   tags: {
       layer: {

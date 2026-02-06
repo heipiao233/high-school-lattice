@@ -19,6 +19,7 @@ type LatticeDefBase = {
   name: string;
   description?: string;
   atoms: AtomDef[];
+  borders: number[][];
 };
 
 export type LatticeDefWithTags = LatticeDefBase & {
@@ -38,6 +39,7 @@ export type LatticeDef = LatticeDefWithTags | LatticeDefWithoutTags;
 export type LatticeProps = LatticeDef & {
   filled: boolean;
   showConnections?: boolean;
+  showBorders?: boolean;
   setAtomDesc?: (desc: string) => void;
 };
 
@@ -136,7 +138,7 @@ function getNeighboursSource(
 
 export function Lattice(lattice: LatticeProps) {
   const [selectedAtom, setSelectedAtom] = useState<AtomDef | null>(null);
-  const { showConnections = false } = lattice;
+  const { showConnections = false, showBorders = false } = lattice;
 
   // 重置选中的原子当晶格改变时
   useEffect(() => {
@@ -299,6 +301,10 @@ export function Lattice(lattice: LatticeProps) {
     return lines;
   }, [allAtomsForConnections, lattice, showConnections]);
 
+  const borderLines = useMemo(() => lattice.borders.map((points) => {
+    return points.map(i => lattice.atoms[i].position)
+  }), [lattice.atoms, lattice.borders]);
+
   // 渲染单个原子
   const renderAtom = (atom: AtomDef, isSelected: boolean) => {
     const tag = resolveTagForAtom(atom, lattice);
@@ -330,6 +336,17 @@ export function Lattice(lattice: LatticeProps) {
           key={`${positionToString(line.start)}-${positionToString(line.end)}-${index}`}
           points={[line.start, line.end]}
           color={line.color}
+        />
+      ))}
+
+      {/* 渲染边框 */}
+      {showBorders && borderLines.map((line, index) => (
+        <Line
+          key={index}
+          points={line}
+          dashed={showConnections}
+          dashScale={10}
+          lineWidth={2}
         />
       ))}
     </>

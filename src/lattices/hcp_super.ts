@@ -37,6 +37,14 @@ export default {
     { position: [-0.5, Math.sqrt(8 / 3) / 2, -Math.sqrt(3) / 2], tags: { layer: "A" } },
     { position: [0.5, Math.sqrt(8 / 3) / 2, -Math.sqrt(3) / 2], tags: { layer: "A" } },
   ],
+  borders: [
+    [1, 2, 12, 11],
+    [2, 3, 13, 12],
+    [3, 4, 14, 13],
+    [4, 5, 15, 14],
+    [5, 6, 16, 15],
+    [6, 1, 11, 16]
+  ],
   mainTag: "layer",
   tags: {
     layer: {

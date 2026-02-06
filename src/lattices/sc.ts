@@ -37,6 +37,12 @@ export default {
       position: [0.5, 0.5, 0.5],
     },
   ],
+  borders: [
+    [0, 1, 5, 4],
+    [1, 3, 7, 5],
+    [3, 2, 6, 7],
+    [2, 0, 4, 6]
+  ],
   radius: 1 / 2,
   color: 0x00ccff,
   neighbours: [
