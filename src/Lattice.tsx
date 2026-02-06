@@ -67,7 +67,7 @@ function getMainTagMap(lattice: LatticeDefWithTags) {
 
 // 辅助函数：位置转字符串
 function positionToString(position: [number, number, number]): string {
-  return `${position[0]},${position[1]},${position[2]}`;
+  return `${position[0].toFixed(4)},${position[1].toFixed(4)},${position[2].toFixed(4)}`;
 }
 
 // 辅助函数：将相对偏移向量应用原子的变换（旋转 + 反演）
@@ -158,7 +158,7 @@ export function Lattice(lattice: LatticeProps) {
       return;
     }
 
-    let desc = `坐标: (${selectedAtom.position.join(", ")})\n`;
+    let desc = `坐标: (${positionToString(selectedAtom.position)})\n`;
 
     if (isLatticeWithTags(lattice) && isAtomWithTags(selectedAtom)) {
       const mainTagMap = getMainTagMap(lattice);
@@ -224,7 +224,7 @@ export function Lattice(lattice: LatticeProps) {
 
 
   // 所有显示的原子集合（包括原始原子、选中的原子和邻居原子）
-  const allAtomsForConnections = useMemo(() => {
+  const allAtomsShown = useMemo(() => {
     const atoms = [...lattice.atoms];
 
     // 添加选中的原子（如果不在原始原子列表中）
@@ -254,8 +254,8 @@ export function Lattice(lattice: LatticeProps) {
     }> = [];
 
     // 遍历所有原子
-    for (let i = 0; i < allAtomsForConnections.length; i++) {
-      const atom = allAtomsForConnections[i];
+    for (let i = 0; i < allAtomsShown.length; i++) {
+      const atom = allAtomsShown[i];
       const tag = resolveTagForAtom(atom, lattice);
       const neighboursSource = getNeighboursSource(atom, lattice);
 
@@ -276,7 +276,7 @@ export function Lattice(lattice: LatticeProps) {
 
         // 检查邻居位置是否在原子列表中
         const neighbourPositionStr = positionToString(neighbourPosition);
-        const neighbourAtom = allAtomsForConnections.find(a =>
+        const neighbourAtom = allAtomsShown.find(a =>
           positionToString(a.position) === neighbourPositionStr
         );
 
@@ -299,7 +299,7 @@ export function Lattice(lattice: LatticeProps) {
     }
 
     return lines;
-  }, [allAtomsForConnections, lattice, showConnections]);
+  }, [allAtomsShown, lattice, showConnections]);
 
   const borderLines = useMemo(() => lattice.borders.map((points) => {
     return points.map(i => lattice.atoms[i].position)
@@ -326,7 +326,7 @@ export function Lattice(lattice: LatticeProps) {
   return (
     <>
       {/* 渲染所有原子 */}
-      {allAtomsForConnections.map((atom) =>
+      {allAtomsShown.map((atom) =>
         renderAtom(atom, selectedAtom === atom)
       )}
 
