@@ -21,6 +21,7 @@ function App() {
   const [filled, setFilled] = useState<boolean>(false);
   const [showConnections, setShowConnections] = useState<boolean>(false);
   const [showBorders, setShowBorders] = useState<boolean>(false);
+  const [multiSelect, setMultiSelect] = useState<boolean>(false);
   const [latticeKey, setLatticeKey] = useState<string>(() => {
     const hash = window.location.hash.slice(1);
     return lattices.has(hash) ? hash : "fcc";
@@ -70,6 +71,7 @@ function App() {
             filled={filled}
             showConnections={showConnections}
             showBorders={showBorders}
+            multiSelect={multiSelect}
             setAtomDesc={setSelectedAtomDesc}
           />
           <ArcballControls makeDefault ref={ctrl} />
@@ -154,6 +156,25 @@ function App() {
                   role="checkbox"
                 />
                 <span style={{ marginLeft: "8px" }}>显示边框</span>
+              </label>
+            </div>
+            <div role="group" aria-label="多选选项" id="multiselect-option">
+              <label
+                htmlFor="multiselect-checkbox"
+                style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+              >
+                <MdCheckbox
+                  id="multiselect-checkbox"
+                  checked={multiSelect}
+                  touch-target="wrapper"
+                  onClick={() => {
+                    setMultiSelect(!multiSelect);
+                  }}
+                  aria-label="切换多选"
+                  aria-checked={multiSelect}
+                  role="checkbox"
+                />
+                <span style={{ marginLeft: "8px" }}>多选模式（Alt）</span>
               </label>
             </div>
           </div>

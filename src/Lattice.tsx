@@ -40,6 +40,7 @@ export type LatticeProps = LatticeDef & {
   filled: boolean;
   showConnections?: boolean;
   showBorders?: boolean;
+  multiSelect?: boolean;
   setAtomDesc?: (desc: string) => void;
 };
 
@@ -54,10 +55,6 @@ function isLatticeWithoutTags(lattice: LatticeDef): lattice is LatticeDefWithout
 
 function isAtomWithTags(atom: AtomDef): atom is AtomDefWithTags {
   return "tags" in atom;
-}
-
-function isNeighbourWithTags(neighbour: NeighbourDef): neighbour is NeighbourDefWithTags {
-  return "tags" in neighbour;
 }
 
 // 辅助函数：获取带标签晶格的主标签映射
@@ -131,47 +128,66 @@ function resolveTagForAtom(
 function getNeighboursSource(
   atom: AtomDef,
   lattice: LatticeDef
-): NeighbourDef[] | NeighbourDefWithTags[] | undefined {
+): {
+    neighbour: NeighbourDef | NeighbourDefWithTags,
+    atom: AtomDef
+    }[] {
   const tag = resolveTagForAtom(atom, lattice);
-  return tag.neighbours;
+  return tag.neighbours?.map(neighbour => { return { atom, neighbour } }) || [];
+}
+
+function useArray<T>(initial: T[]) {
+  const [items, setItems] = useState(initial);
+  return {
+    items,
+    add: (item: T) => setItems(prev => [...prev, item]),
+    remove: (index: number) => setItems(prev => prev.filter((_, i) => i !== index)),
+    set: (item: T) => setItems([item]),
+    clear: () => setItems([]),
+    setItems
+  };
+}
+
+function atomDescription(atom: AtomDef, lattice: LatticeProps): string {
+  let desc = `坐标: (${positionToString(atom.position)})\n`;
+
+  if (isLatticeWithTags(lattice) && isAtomWithTags(atom)) {
+    const mainTagMap = getMainTagMap(lattice);
+    const tagKey = atom.tags?.[lattice.mainTag];
+    const tag = tagKey ? mainTagMap[tagKey] : null;
+
+    if (tag && tag.name) {
+      desc += `类型: ${tag.name}`;
+    }
+  }
+
+  return desc;
 }
 
 export function Lattice(lattice: LatticeProps) {
-  const [selectedAtom, setSelectedAtom] = useState<AtomDef | null>(null);
+  const { items: selectedAtoms, add: selectAtom, remove: deselectAtom, set: setSelected, clear: clearSelection } = useArray<AtomDef>([]);
   const { showConnections = false, showBorders = false } = lattice;
 
   // 重置选中的原子当晶格改变时
   useEffect(() => {
     // 使用requestAnimationFrame避免同步setState
     const timer = requestAnimationFrame(() => {
-      setSelectedAtom(null);
+      clearSelection()
     });
     return () => cancelAnimationFrame(timer);
   }, [lattice.name, lattice.setAtomDesc]);
 
   // 更新原子描述
   useEffect(() => {
-    if (!lattice.setAtomDesc || !selectedAtom) {
+    if (!lattice.setAtomDesc || selectedAtoms.length === 0) {
       if (lattice.setAtomDesc) {
         lattice.setAtomDesc("");
       }
       return;
     }
 
-    let desc = `坐标: (${positionToString(selectedAtom.position)})\n`;
-
-    if (isLatticeWithTags(lattice) && isAtomWithTags(selectedAtom)) {
-      const mainTagMap = getMainTagMap(lattice);
-      const tagKey = selectedAtom.tags?.[lattice.mainTag];
-      const tag = tagKey ? mainTagMap[tagKey] : null;
-
-      if (tag && tag.name) {
-        desc += `类型: ${tag.name}`;
-      }
-    }
-
-    lattice.setAtomDesc(desc);
-  }, [selectedAtom, lattice.setAtomDesc, lattice]);
+    lattice.setAtomDesc(atomDescription(selectedAtoms[0], lattice));
+  }, [selectedAtoms, lattice.setAtomDesc, lattice]);
 
   // 原子位置集合（用于快速查找）
   const atomPositionSet = useMemo(() => {
@@ -182,44 +198,31 @@ export function Lattice(lattice: LatticeProps) {
 
   // 计算邻居原子（不包括已经在显示的原子）
   const neighbourAtoms = useMemo(() => {
-    if (!selectedAtom) return [];
+    if (!selectedAtoms) return [];
 
-    const neighboursSource = getNeighboursSource(selectedAtom, lattice);
-    if (!neighboursSource) return [];
-
-    return neighboursSource
-      .map((neighbour) => {
+    return selectedAtoms
+      .flatMap((atom) => getNeighboursSource(atom, lattice))
+      .map(({ atom, neighbour }) => {
         // 应用选中原子的变换到邻居的相对坐标
         const transformedOffset = applyTransformToOffset(
           neighbour.position,
-          selectedAtom.rotation,
-          selectedAtom.invert
+          atom.rotation,
+          atom.invert
         );
         const neighbourPosition: [number, number, number] = [
-          selectedAtom.position[0] + transformedOffset[0],
-          selectedAtom.position[1] + transformedOffset[1],
-          selectedAtom.position[2] + transformedOffset[2],
+          atom.position[0] + transformedOffset[0],
+          atom.position[1] + transformedOffset[1],
+          atom.position[2] + transformedOffset[2],
         ];
-        return { neighbour, neighbourPosition };
-      })
-      .filter(({ neighbourPosition }) =>
-        !atomPositionSet.has(positionToString(neighbourPosition))
-      )
-      .map(({ neighbour, neighbourPosition }) => {
-        const atomDef: AtomDef = {
-          position: neighbourPosition,
-          rotation: neighbour.rotation,
-          invert: neighbour.invert
+        return {
+          ...neighbour,
+          position: neighbourPosition
         };
-
-        // 如果是带标签的邻居，保留标签
-        if (isNeighbourWithTags(neighbour)) {
-          (atomDef as AtomDefWithTags).tags = neighbour.tags;
-        }
-
-        return atomDef;
-      });
-  }, [selectedAtom, lattice, atomPositionSet]);
+      })
+      .filter(neighbour =>
+        !atomPositionSet.has(positionToString(neighbour.position))
+      );
+  }, [selectedAtoms, lattice, atomPositionSet]);
 
 
 
@@ -228,9 +231,9 @@ export function Lattice(lattice: LatticeProps) {
     const atoms = [...lattice.atoms];
 
     // 添加选中的原子（如果不在原始原子列表中）
-    if (selectedAtom && !atomPositionSet.has(positionToString(selectedAtom.position))) {
-      atoms.push(selectedAtom);
-    }
+    selectedAtoms
+      .filter(atom => !atomPositionSet.has(positionToString(atom.position)))
+      .forEach(atom => atoms.push(atom))
 
     // 添加邻居原子（如果不在原子列表中）
     for (const atom of neighbourAtoms) {
@@ -241,7 +244,7 @@ export function Lattice(lattice: LatticeProps) {
     }
 
     return atoms;
-  }, [lattice.atoms, selectedAtom, atomPositionSet, neighbourAtoms]);
+  }, [lattice.atoms, selectedAtoms, atomPositionSet, neighbourAtoms]);
 
   // 计算所有原子之间的连接线
   const connectionLines = useMemo(() => {
@@ -264,7 +267,7 @@ export function Lattice(lattice: LatticeProps) {
       // 计算当前原子的所有邻居位置
       for (const neighbour of neighboursSource) {
         const transformedOffset = applyTransformToOffset(
-          neighbour.position,
+          neighbour.neighbour.position,
           atom.rotation,
           atom.invert
         );
@@ -314,8 +317,16 @@ export function Lattice(lattice: LatticeProps) {
         position={atom.position}
         color={isSelected ? 0xff0000 : tag.color}
         radius={lattice.filled ? tag.radius : 0.1}
-        onClick={() => {
-          setSelectedAtom(isSelected ? null : atom);
+        onClick={event => {
+          const idx = selectedAtoms.indexOf(atom);
+          const ms = event.altKey || lattice.multiSelect;
+          if (ms && idx === -1) {
+            selectAtom(atom);
+          } else if (ms) {
+            deselectAtom(idx);
+          } else {
+            setSelected(atom);
+          }
         }}
       />
     );
@@ -327,7 +338,7 @@ export function Lattice(lattice: LatticeProps) {
     <>
       {/* 渲染所有原子 */}
       {allAtomsShown.map((atom) =>
-        renderAtom(atom, selectedAtom === atom)
+        renderAtom(atom, selectedAtoms.indexOf(atom) !== -1)
       )}
 
       {/* 渲染连接线 */}

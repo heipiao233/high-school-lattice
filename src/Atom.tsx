@@ -15,13 +15,13 @@ type AtomProps = {
   position: [number, number, number];
   color: THREE.ColorRepresentation;
   radius: number;
-  onClick?: () => void;
+  onClick?: (event: ThreeEvent<MouseEvent>) => void;
 };
 
 export function Atom({ position, color, radius, onClick }: AtomProps) {
   const handleClick = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation();
-    onClick?.();
+    onClick?.(event);
   };
 
   return (
