@@ -32,6 +32,10 @@ function App() {
   // 当晶胞类型变化时更新 hash
   useEffect(() => {
     window.location.hash = latticeKey;
+    const handle = requestAnimationFrame(() => {
+      setSelectedAtoms([]);
+    })
+    return () => cancelAnimationFrame(handle);
   }, [latticeKey]);
   const latticeTypes = Array.from(lattices.entries()).map(([type, def]) => (
     <MdSelectOption key={type} value={type}>

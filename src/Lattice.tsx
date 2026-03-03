@@ -1,7 +1,7 @@
 import type { ColorRepresentation } from "three";
 import * as THREE from "three";
 import { Atom, type AtomDef, type AtomDefWithTags } from "./Atom";
-import { useMemo, useEffect } from "react";
+import { useMemo } from "react";
 import { Line } from "@react-three/drei";
 import { MdList, MdListItem } from "./components";
 
@@ -167,15 +167,6 @@ export function AtomDescription(atom: AtomDef, lattice: LatticeDef) {
 export function Lattice(lattice: LatticeProps) {
   const { showConnections = false, showBorders = false } = lattice;
 
-  // 重置选中的原子当晶格改变时
-  useEffect(() => {
-    // 使用requestAnimationFrame避免同步setState
-    const timer = requestAnimationFrame(() => {
-      lattice.setSelectedAtoms([])
-    });
-    return () => cancelAnimationFrame(timer);
-  }, [lattice]);
-
   // 原子位置集合（用于快速查找）
   const atomPositionSet = useMemo(() => {
     return new Set(
@@ -310,7 +301,7 @@ export function Lattice(lattice: LatticeProps) {
           if (ms && idx === -1) {
             lattice.setSelectedAtoms([...lattice.selectedAtoms, atom]);
           } else if (ms) {
-            lattice.setSelectedAtoms(lattice.selectedAtoms.splice(idx, 1))
+            lattice.setSelectedAtoms(lattice.selectedAtoms.filter((_,i)=>i!==idx))
           } else {
             lattice.setSelectedAtoms([atom]);
           }
