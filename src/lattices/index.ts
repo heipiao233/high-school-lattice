@@ -3,8 +3,8 @@ import bcc from "./bcc";
 import fcc from "./fcc";
 import flourite from "./flourite";
 import sc from "./sc";
-import hcp_single from "./hcp_single";
-import hcp_super from "./hcp_super";
+import hcp from "./hcp";
+import hcp_hex from "./hcp_hex";
 import diamond from "./diamond";
 
 export default new Map<string, LatticeDef>([
@@ -12,7 +12,7 @@ export default new Map<string, LatticeDef>([
   ["bcc", bcc],
   ["sc", sc],
   ["flourite", flourite],
-  ["hcp_single", hcp_single],
-  ["hcp_super", hcp_super],
+  ["hcp", hcp],
+  ["hcp_hex", hcp_hex],
   ["diamond", diamond]
 ]);
