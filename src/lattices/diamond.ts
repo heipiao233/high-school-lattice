@@ -1,9 +1,9 @@
-import dedent from "dedent";
+import { docDedent } from "../docDedent";
 import type { LatticeDefWithTags } from "../Lattice";
 
 export default {
   name: "金刚石",
-  description: dedent`**金刚石结构**是一种典型的共价晶体结构，由碳形成正四面体结构构成。
+  description: docDedent`**金刚石结构**是一种典型的共价晶体结构，由碳形成正四面体结构构成。
 
   一个这样的晶胞含 8 个原子，其中每个顶点为 1/8 个，每个面心为 1/2 个。配位数为 4，原子间距为 $\sqrt{3}a/4$。
 

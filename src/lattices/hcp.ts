@@ -1,9 +1,11 @@
-import dedent from "dedent";
 import type { LatticeDefWithTags } from "../Lattice";
+import { docDedent } from "../docDedent";
+
+
 
 export default {
   name: "六方堆积",
-  description: dedent`**六方堆积（HCP）** 的晶胞，底面为 60°和120° 的菱形，高为 $c = \sqrt{\frac{8}{3}} a$。
+  description: docDedent`**六方堆积（HCP）** 的晶胞，底面为 60°和120° 的菱形，高为 $c = \sqrt{\frac{8}{3}} a$。
 
   该晶胞包含 2 个原子，顶点上的原子为 $\frac{1}{6}$或 $\frac{1}{12}$个，中间的原子为一整个。
 

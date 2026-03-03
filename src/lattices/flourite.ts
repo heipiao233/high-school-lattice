@@ -1,9 +1,9 @@
-import dedent from "dedent";
 import type { LatticeDefWithTags } from "../Lattice";
+import { docDedent } from "../docDedent";
 
 export default {
   name: "萤石（CaF₂）",
-  description: dedent`**萤石（CaF₂）型结构**是一种典型的离子晶体结构，由钙离子形成面心立方格子，氟离子占据全部四面体空隙构成。
+  description: docDedent`**萤石（CaF₂）型结构**是一种典型的离子晶体结构，由钙离子形成面心立方格子，氟离子占据全部四面体空隙构成。
 
   一个这样的晶胞含 12 个离子，其中钙离子（Ca²⁺）4 个（面心立方顶点和面心，每个顶点为 1/8 个，每个面心为 1/2 个），氟离子（F⁻）8 个（全部位于四面体空隙中）。配位数为 8 和 4，即每个 Ca²⁺ 被 8 个 F⁻ 包围，每个 F⁻ 被 4 个 Ca²⁺ 包围，原子间距为 $\sqrt{3}a/4$（Ca-F）。
 

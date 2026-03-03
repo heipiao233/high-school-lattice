@@ -1,9 +1,9 @@
-import dedent from "dedent";
 import type { LatticeDefWithoutTags } from "../Lattice";
+import { docDedent } from "../docDedent";
 
 export default {
   name: "体心立方堆积",
-  description: dedent`**体心立方堆积**是一种常见的晶体结构，由非密置层交错堆叠而成，其中原子位于立方体的顶点和体心。
+  description: docDedent`**体心立方堆积**是一种常见的晶体结构，由非密置层交错堆叠而成，其中原子位于立方体的顶点和体心。
 
   一个这样的晶胞含 2 个原子。位于顶点的原子每个为 1/8 个，位于体心的原子为 1 个。配位数为 8，最近邻原子间距为 $\frac{\sqrt{3}}{2}a$（原子半径为 $\frac{\sqrt{3}}{4}a$）。
 

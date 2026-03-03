@@ -1,9 +1,9 @@
-import dedent from "dedent";
 import type { LatticeDefWithoutTags } from "../Lattice";
+import { docDedent } from "../docDedent";
 
 export default {
   name: "简单立方堆积",
-  description: dedent`**简单立方堆积**是一种晶体结构，由非密置层交错堆叠而成，其中原子位于立方体的顶点。
+  description: docDedent`**简单立方堆积**是一种晶体结构，由非密置层交错堆叠而成，其中原子位于立方体的顶点。
 
   一个这样的晶胞含 1 个原子。位于顶点的原子每个为 1/8 个。配位数为 6，最近邻原子间距为 $a$（原子半径为 $\frac{a}{2}$）。
 

@@ -1,9 +1,9 @@
-import dedent from "dedent";
 import type { LatticeDefWithTags } from "../Lattice";
+import { docDedent } from "../docDedent";
 
 export default {
   name: "面心立方堆积",
-  description: dedent`**面心立方堆积**是一种常见的晶体结构，其中原子位于立方体的顶点和面心。
+  description: docDedent`**面心立方堆积**是一种常见的晶体结构，其中原子位于立方体的顶点和面心。
 
   实际上，它可以看作由图中用不同颜色标注的密置层交错堆叠而成，每三层重复一次。
 
