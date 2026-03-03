@@ -1,7 +1,7 @@
 import { ArcballControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useRef, useState, useEffect } from "react";
-import * as THREE from "three";
+import { Fog } from "three";
 import { AtomDescription, Lattice } from "./Lattice";
 import {
   MdCheckbox,
@@ -48,7 +48,7 @@ function App() {
   return (
     <>
       <div id="canvas-container" aria-label="3D可视化区域" role="application">
-        <Canvas scene={{ fog: new THREE.Fog("#242424", 0, 150) }}>
+        <Canvas scene={{ fog: new Fog("#242424", 0, 150) }}>
           <ambientLight color={0xffffff} intensity={0.5} />
           <directionalLight
             color={0xffffff}

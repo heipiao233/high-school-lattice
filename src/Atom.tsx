@@ -1,5 +1,5 @@
 import type { ThreeEvent } from "@react-three/fiber";
-import * as THREE from "three";
+import { type ColorRepresentation } from "three";
 
 export type AtomDef = {
   position: [number, number, number];
@@ -13,7 +13,7 @@ export type AtomDefWithTags = AtomDef & {
 
 type AtomProps = {
   position: [number, number, number];
-  color: THREE.ColorRepresentation;
+  color: ColorRepresentation;
   radius: number;
   onClick?: (event: ThreeEvent<MouseEvent>) => void;
 };

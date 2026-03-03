@@ -1,5 +1,4 @@
-import type { ColorRepresentation } from "three";
-import * as THREE from "three";
+import { Vector3, Color, type ColorRepresentation, Euler } from "three";
 import { Atom, type AtomDef, type AtomDefWithTags } from "./Atom";
 import { useMemo } from "react";
 import { Line } from "@react-three/drei";
@@ -80,11 +79,11 @@ function applyTransformToOffset(
   rotation?: [number, number, number],
   invert?: boolean
 ): [number, number, number] {
-  const vec = new THREE.Vector3(offset[0], offset[1], offset[2]);
+  const vec = new Vector3(offset[0], offset[1], offset[2]);
   // 1. 应用旋转
   if (rotation) {
     const [rx, ry, rz] = rotation;
-    const euler = new THREE.Euler(rx, ry, rz, 'XYZ');
+    const euler = new Euler(rx, ry, rz, 'XYZ');
     vec.applyEuler(euler);
   }
   // 2. 应用反演
@@ -231,7 +230,7 @@ export function Lattice(lattice: LatticeProps) {
     const lines: Array<{
       start: [number, number, number];
       end: [number, number, number];
-      color: THREE.ColorRepresentation;
+      color: ColorRepresentation;
     }> = [];
 
     // 遍历所有原子
@@ -266,8 +265,8 @@ export function Lattice(lattice: LatticeProps) {
           const neighbourTag = resolveTagForAtom(neighbourAtom, lattice);
 
           // 使用两个原子颜色的混合色
-          const color = new THREE.Color(tag.color);
-          const neighbourColor = new THREE.Color(neighbourTag.color);
+          const color = new Color(tag.color);
+          const neighbourColor = new Color(neighbourTag.color);
           color.lerp(neighbourColor, 0.5);
 
           lines.push({
