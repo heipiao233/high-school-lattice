@@ -193,7 +193,7 @@ function App() {
           <article id="lattice-atom-desc" aria-labelledby="lattice-title">
             <h2 id="lattice-title">{lattice.name}</h2>
             <div role="region" aria-label="晶格描述">
-              <Markdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>
+              <Markdown remarkPlugins={[remarkMath]} rehypePlugins={[() => rehypeKatex({strict: (code) => code === "unicodeTextInMathMode" ? "ignore": "error"})]}>
                 {lattice.description}
               </Markdown>
             </div>
