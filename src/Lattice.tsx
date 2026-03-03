@@ -1,7 +1,7 @@
 import type { ColorRepresentation } from "three";
 import * as THREE from "three";
 import { Atom, type AtomDef, type AtomDefWithTags } from "./Atom";
-import { useState, useMemo, useEffect } from "react";
+import { useMemo, useEffect } from "react";
 import { Line } from "@react-three/drei";
 import { MdList, MdListItem } from "./components";
 
@@ -174,7 +174,7 @@ export function Lattice(lattice: LatticeProps) {
       lattice.setSelectedAtoms([])
     });
     return () => cancelAnimationFrame(timer);
-  }, [lattice.name, lattice.setSelectedAtoms]);
+  }, [lattice]);
 
   // 原子位置集合（用于快速查找）
   const atomPositionSet = useMemo(() => {
