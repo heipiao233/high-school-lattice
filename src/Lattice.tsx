@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { Atom, type AtomDef, type AtomDefWithTags } from "./Atom";
 import { useState, useMemo, useEffect } from "react";
 import { Line } from "@react-three/drei";
+import { MdList, MdListItem } from "./components";
 
 export type NeighbourDef = AtomDef;
 
@@ -41,7 +42,13 @@ export type LatticeProps = LatticeDef & {
   showConnections?: boolean;
   showBorders?: boolean;
   multiSelect?: boolean;
-  setAtomDesc?: (desc: string) => void;
+  selectedAtoms: AtomDef[]
+  setSelectedAtoms: (atoms: AtomDef[]) => void;
+};
+
+export type LatticeAtomDesc = {
+  headline: string;
+  supporting?: string;
 };
 
 // 类型守卫函数
@@ -136,58 +143,38 @@ function getNeighboursSource(
   return tag.neighbours?.map(neighbour => { return { atom, neighbour } }) || [];
 }
 
-function useArray<T>(initial: T[]) {
-  const [items, setItems] = useState(initial);
-  return {
-    items,
-    add: (item: T) => setItems(prev => [...prev, item]),
-    remove: (index: number) => setItems(prev => prev.filter((_, i) => i !== index)),
-    set: (item: T) => setItems([item]),
-    clear: () => setItems([]),
-    setItems
-  };
-}
-
-function atomDescription(atom: AtomDef, lattice: LatticeProps): string {
-  let desc = `坐标: (${positionToString(atom.position)})\n`;
-
+export function AtomDescription(atom: AtomDef, lattice: LatticeDef) {
+  let supporting = undefined;
   if (isLatticeWithTags(lattice) && isAtomWithTags(atom)) {
     const mainTagMap = getMainTagMap(lattice);
     const tagKey = atom.tags?.[lattice.mainTag];
     const tag = tagKey ? mainTagMap[tagKey] : null;
 
     if (tag && tag.name) {
-      desc += `类型: ${tag.name}`;
+      supporting = `类型: ${tag.name}`;
     }
   }
-
-  return desc;
+  return (
+    <MdList>
+      <MdListItem>
+        <div slot="headline">({positionToString(atom.position)})</div>
+        <div slot="supporting-text">{supporting}</div>
+      </MdListItem>
+    </MdList>
+  )
 }
 
 export function Lattice(lattice: LatticeProps) {
-  const { items: selectedAtoms, add: selectAtom, remove: deselectAtom, set: setSelected, clear: clearSelection } = useArray<AtomDef>([]);
   const { showConnections = false, showBorders = false } = lattice;
 
   // 重置选中的原子当晶格改变时
   useEffect(() => {
     // 使用requestAnimationFrame避免同步setState
     const timer = requestAnimationFrame(() => {
-      clearSelection()
+      lattice.setSelectedAtoms([])
     });
     return () => cancelAnimationFrame(timer);
-  }, [lattice.name, lattice.setAtomDesc]);
-
-  // 更新原子描述
-  useEffect(() => {
-    if (!lattice.setAtomDesc || selectedAtoms.length === 0) {
-      if (lattice.setAtomDesc) {
-        lattice.setAtomDesc("");
-      }
-      return;
-    }
-
-    lattice.setAtomDesc(atomDescription(selectedAtoms[0], lattice));
-  }, [selectedAtoms, lattice.setAtomDesc, lattice]);
+  }, [lattice.name, lattice.setSelectedAtoms]);
 
   // 原子位置集合（用于快速查找）
   const atomPositionSet = useMemo(() => {
@@ -198,9 +185,9 @@ export function Lattice(lattice: LatticeProps) {
 
   // 计算邻居原子（不包括已经在显示的原子）
   const neighbourAtoms = useMemo(() => {
-    if (!selectedAtoms) return [];
+    if (!lattice.selectedAtoms) return [];
 
-    return selectedAtoms
+    return lattice.selectedAtoms
       .flatMap((atom) => getNeighboursSource(atom, lattice))
       .map(({ atom, neighbour }) => {
         // 应用选中原子的变换到邻居的相对坐标
@@ -222,7 +209,7 @@ export function Lattice(lattice: LatticeProps) {
       .filter(neighbour =>
         !atomPositionSet.has(positionToString(neighbour.position))
       );
-  }, [selectedAtoms, lattice, atomPositionSet]);
+  }, [lattice, atomPositionSet]);
 
 
 
@@ -231,7 +218,7 @@ export function Lattice(lattice: LatticeProps) {
     const atoms = [...lattice.atoms];
 
     // 添加选中的原子（如果不在原始原子列表中）
-    selectedAtoms
+    lattice.selectedAtoms
       .filter(atom => !atomPositionSet.has(positionToString(atom.position)))
       .forEach(atom => atoms.push(atom))
 
@@ -244,7 +231,7 @@ export function Lattice(lattice: LatticeProps) {
     }
 
     return atoms;
-  }, [lattice.atoms, selectedAtoms, atomPositionSet, neighbourAtoms]);
+  }, [lattice.atoms, lattice.selectedAtoms, atomPositionSet, neighbourAtoms]);
 
   // 计算所有原子之间的连接线
   const connectionLines = useMemo(() => {
@@ -318,14 +305,14 @@ export function Lattice(lattice: LatticeProps) {
         color={isSelected ? 0xff0000 : tag.color}
         radius={lattice.filled ? tag.radius : 0.1}
         onClick={event => {
-          const idx = selectedAtoms.indexOf(atom);
-          const ms = event.altKey || lattice.multiSelect;
+          const idx = lattice.selectedAtoms.indexOf(atom);
+          const ms = event.shiftKey || lattice.multiSelect;
           if (ms && idx === -1) {
-            selectAtom(atom);
+            lattice.setSelectedAtoms([...lattice.selectedAtoms, atom]);
           } else if (ms) {
-            deselectAtom(idx);
+            lattice.setSelectedAtoms(lattice.selectedAtoms.splice(idx, 1))
           } else {
-            setSelected(atom);
+            lattice.setSelectedAtoms([atom]);
           }
         }}
       />
@@ -338,7 +325,7 @@ export function Lattice(lattice: LatticeProps) {
     <>
       {/* 渲染所有原子 */}
       {allAtomsShown.map((atom) =>
-        renderAtom(atom, selectedAtoms.indexOf(atom) !== -1)
+        renderAtom(atom, lattice.selectedAtoms.indexOf(atom) !== -1)
       )}
 
       {/* 渲染连接线 */}

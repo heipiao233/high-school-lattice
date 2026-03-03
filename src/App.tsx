@@ -2,7 +2,7 @@ import { ArcballControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useRef, useState, useEffect } from "react";
 import * as THREE from "three";
-import { Lattice } from "./Lattice";
+import { AtomDescription, Lattice } from "./Lattice";
 import {
   MdCheckbox,
   MdDivider,
@@ -15,6 +15,7 @@ import { ArcballControls as ArcballCtrls } from "three-stdlib";
 import Markdown from "react-markdown";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
+import type { AtomDef } from "./Atom";
 
 function App() {
   const ctrl = useRef<ArcballCtrls>(null!);
@@ -26,13 +27,7 @@ function App() {
     const hash = window.location.hash.slice(1);
     return lattices.has(hash) ? hash : "fcc";
   });
-  const [selectedAtomDesc, setSelectedAtomDesc] = useState<string>("");
-  const atomDesc = selectedAtomDesc.split("\n").map((line, index) => (
-    <span key={index}>
-      {line}
-      <br />
-    </span>
-  ));
+  const [selectedAtoms, setSelectedAtoms] = useState<AtomDef[]>([]);
 
   // 当晶胞类型变化时更新 hash
   useEffect(() => {
@@ -44,9 +39,11 @@ function App() {
     </MdSelectOption>
   ));
   const lattice = lattices.get(latticeKey)!;
+  const selectedAtomsDesc = selectedAtoms
+    .map(atom => AtomDescription(atom, lattice));
   return (
     <>
-      <div id="canvas-container" aria-label="3D晶格可视化区域" role="application">
+      <div id="canvas-container" aria-label="3D可视化区域" role="application">
         <Canvas scene={{ fog: new THREE.Fog("#242424", 0, 150) }}>
           <ambientLight color={0xffffff} intensity={0.5} />
           <directionalLight
@@ -72,25 +69,26 @@ function App() {
             showConnections={showConnections}
             showBorders={showBorders}
             multiSelect={multiSelect}
-            setAtomDesc={setSelectedAtomDesc}
+            selectedAtoms={selectedAtoms}
+            setSelectedAtoms={setSelectedAtoms}
           />
           <ArcballControls makeDefault ref={ctrl} />
         </Canvas>
       </div>
       <div id="side-panel" role="complementary" aria-label="控制面板">
         <div id="side-panel-content">
-          <div id="controls" role="toolbar" aria-label="晶格控制工具栏">
+          <div id="controls" role="toolbar" aria-label="控制工具栏">
             <MdOutlinedSelect
               id="lattice-select"
               value={latticeKey}
               onChange={(e) => setLatticeKey(e.target.value)}
-              aria-label="选择晶格类型"
+              aria-label="选择类型"
               aria-describedby="lattice-select-description"
             >
               {latticeTypes}
             </MdOutlinedSelect>
             <div id="lattice-select-description" className="sr-only">
-              从下拉列表中选择要显示的晶格类型
+              从下拉列表中选择要显示的类型
             </div>
             <MdOutlinedButton
               id="reset-camera-button"
@@ -100,6 +98,15 @@ function App() {
               aria-label="重置相机视角"
             >
               恢复视角
+            </MdOutlinedButton>
+            <MdOutlinedButton
+              id="deselect-all-button"
+              onClick={() => {
+                setSelectedAtoms([])
+              }}
+              aria-label="清除选择"
+            >
+              清除选择
             </MdOutlinedButton>
             <div role="group" aria-label="填充选项" id="fill-option">
               <label
@@ -174,7 +181,7 @@ function App() {
                   aria-checked={multiSelect}
                   role="checkbox"
                 />
-                <span style={{ marginLeft: "8px" }}>多选模式（Alt）</span>
+                <span style={{ marginLeft: "8px" }}>多选模式（Shift）</span>
               </label>
             </div>
           </div>
@@ -186,11 +193,11 @@ function App() {
                 {lattice.description}
               </Markdown>
             </div>
-            {selectedAtomDesc && (
+            {selectedAtomsDesc && (
               <div role="region" aria-label="所选原子信息">
                 <h2>所选原子</h2>
                 <div aria-live="polite" aria-atomic="true">
-                  {atomDesc}
+                  {selectedAtomsDesc}
                 </div>
               </div>
             )}

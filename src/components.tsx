@@ -5,6 +5,8 @@ import { MdSelectOption as MdSelectOptionWebComponent } from "@material/web/sele
 import { MdOutlinedButton as MdOutlinedButtonWebComponent } from "@material/web/button/outlined-button.js";
 import { MdCheckbox as MdCheckboxWebComponent } from "@material/web/checkbox/checkbox.js";
 import { MdDivider as MdDividerWebComponent } from "@material/web/divider/divider.js";
+import { MdList as MdListWebComponent } from "@material/web/list/list.js";
+import { MdListItem as MdListItemWebComponent } from "@material/web/list/list-item.js";
 
 export const MdOutlinedSelect = createComponent({
   tagName: "md-outlined-select",
@@ -33,5 +35,17 @@ export const MdCheckbox = createComponent({
 export const MdDivider = createComponent({
   tagName: "md-divider",
   elementClass: MdDividerWebComponent,
+  react: React,
+});
+
+export const MdList = createComponent({
+  tagName: "md-list",
+  elementClass: MdListWebComponent,
+  react: React,
+});
+
+export const MdListItem = createComponent({
+  tagName: "md-list-item",
+  elementClass: MdListItemWebComponent,
   react: React,
 });

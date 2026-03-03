@@ -2,8 +2,8 @@ import dedent from "dedent";
 import type { LatticeDefWithTags } from "../Lattice";
 
 export default {
-  name: "六方最密堆积（六边形）",
-  description: dedent`该结构清晰展示 **ABA** 堆叠方式：
+  name: "六方堆积（六边形）",
+  description: dedent`**六方堆积（HCP）** 的三个晶胞。该结构清晰展示 **ABA** 堆叠方式：
   - **A 层**（底层与顶层）：原子位于正六边形的六个顶点及中心。
   - **B 层**（中间层）：三个原子位于 $A$ 层原子形成的半数四面体空隙上方，构成等边三角形，与上下两层原子均形成密置接触。
 
