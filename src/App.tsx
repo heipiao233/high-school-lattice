@@ -185,7 +185,7 @@ function App() {
                   aria-checked={multiSelect}
                   role="checkbox"
                 />
-                <span style={{ marginLeft: "8px" }}>多选模式（Shift）</span>
+                <span style={{ marginLeft: "8px" }}>多选 (Shift)</span>
               </label>
             </div>
           </div>
