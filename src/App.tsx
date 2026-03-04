@@ -197,7 +197,7 @@ function App() {
                 {lattice.description}
               </Markdown>
             </div>
-            {selectedAtomsDesc && (
+            {selectedAtomsDesc.length != 0 && (
               <div role="region" aria-label="所选原子信息">
                 <h2>所选原子</h2>
                 <div aria-live="polite" aria-atomic="true">
@@ -207,6 +207,11 @@ function App() {
             )}
           </article>
         </div>
+        <footer>
+          <a href="https://github.com/heipiao233/high-school-lattice">本网站开源</a>
+          {/*<span>|</span>
+          <a href="https://beian.miit.gov.cn/">备案申请中</a>*/}
+        </footer>
       </div>
     </>
   );
