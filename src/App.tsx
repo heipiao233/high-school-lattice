@@ -209,8 +209,8 @@ function App() {
         </div>
         <footer>
           <a href="https://github.com/heipiao233/high-school-lattice">本网站开源</a>
-          {/*<span>|</span>
-          <a href="https://beian.miit.gov.cn/">备案申请中</a>*/}
+          <span>|</span>
+          <a href="https://beian.miit.gov.cn/">闽ICP备2026008613号-1</a>
         </footer>
       </div>
     </>
