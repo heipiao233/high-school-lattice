@@ -211,6 +211,9 @@ function App() {
           <a href="https://github.com/heipiao233/high-school-lattice">本网站开源</a>
           <span>|</span>
           <a href="https://beian.miit.gov.cn/">闽ICP备2026008613号-1</a>
+          <span>|</span>
+          <img src="/beian.png" style={{ height: "16px" }} />
+          <a href="https://beian.mps.gov.cn/#/query/webSearch?code=35010402351852" rel="noreferrer" target="_blank">闽公网安备35010402351852号</a>
         </footer>
       </div>
     </>
